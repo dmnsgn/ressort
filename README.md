@@ -86,7 +86,516 @@ value = from + (to - from) * spring.ease(elapsed / spring.duration);
 
 <!-- api-start -->
 
-Auto-generated API content.
+## Functions
+
+<dl>
+<dt><a href="#advance">advance(current, goal, state, step, [goalVelocity])</a> ⇒ <code>number</code></dt>
+<dd><p>Steps a value towards <code>goal</code> with a spring.</p>
+</dd>
+<dt><a href="#advanceVec2">advanceVec2(current, goal, velocity, step, [goalVelocity])</a> ⇒ <code>module:pex-math~Vec2</code></dt>
+<dd><p>2D vector <code>advance</code>.</p>
+</dd>
+<dt><a href="#advanceVec3">advanceVec3(current, goal, velocity, step, [goalVelocity])</a> ⇒ <code>module:pex-math~Vec3</code></dt>
+<dd><p>Vector <code>advance</code>.</p>
+</dd>
+<dt><a href="#advanceQuat">advanceQuat(current, goal, angularVelocity, step)</a> ⇒ <code>number</code></dt>
+<dd><p>Quaternion <code>advance</code>: springs the scaled angle-axis rotation from <code>goal</code> to
+<code>current</code>.</p>
+</dd>
+<dt><a href="#fromPhysical">fromPhysical(options)</a> ⇒ <code><a href="#SpringConfig">SpringConfig</a></code></dt>
+<dd><p>Spring from mass, stiffness and damping.</p>
+</dd>
+<dt><a href="#toPhysical">toPhysical(config, [mass])</a> ⇒ <code><a href="#PhysicalSpring">PhysicalSpring</a></code></dt>
+<dd><p>Mass, stiffness and damping of a spring.</p>
+</dd>
+<dt><a href="#fromPerceptual">fromPerceptual(options)</a> ⇒ <code><a href="#SpringConfig">SpringConfig</a></code></dt>
+<dd><p>Spring from Apple&#39;s perceptual duration and bounce, as in SwiftUI.</p>
+</dd>
+<dt><a href="#toPerceptual">toPerceptual(config)</a> ⇒ <code><a href="#PerceptualSpring">PerceptualSpring</a></code></dt>
+<dd><p>Perceptual duration and bounce of a spring.</p>
+</dd>
+<dt><a href="#fromSmoothTime">fromSmoothTime(smoothTime)</a> ⇒ <code><a href="#SpringConfig">SpringConfig</a></code></dt>
+<dd><p>Critically damped spring from Lowe&#39;s and Unity&#39;s smooth time.</p>
+<p>From rest, it covers 59% of the distance in <code>smoothTime</code> and 95% in 2.37 ×
+<code>smoothTime</code>.</p>
+</dd>
+<dt><a href="#halfLifeDecay">halfLifeDecay(halfLife, dt)</a> ⇒ <code>number</code></dt>
+<dd><p>Fraction of the distance left after <code>dt</code> with exponential damping.</p>
+</dd>
+<dt><a href="#damp">damp(current, target, halfLife, dt)</a> ⇒ <code>number</code></dt>
+<dd><p>Exponential damping towards <code>target</code>: no velocity, no overshoot.</p>
+</dd>
+<dt><a href="#settlingTime">settlingTime(config, [velocity], [restThreshold])</a> ⇒ <code>number</code></dt>
+<dd><p>Time after which the displacement stays under <code>restThreshold</code>, starting from
+displacement 1.</p>
+</dd>
+<dt><a href="#ease">ease(config, [options])</a> ⇒ <code><a href="#SpringEase">SpringEase</a></code></dt>
+<dd><p>Spring from 0 to 1 as an easing function over its settling time.</p>
+</dd>
+<dt><a href="#smoothDamp">smoothDamp(current, target, state, smoothTime, dt, [maxSpeed])</a> ⇒ <code>number</code></dt>
+<dd><p>Critically damped spring towards <code>target</code> that never overshoots it, with
+Unity&#39;s signature.</p>
+</dd>
+<dt><a href="#smoothDampVec2">smoothDampVec2(current, target, velocity, smoothTime, dt, [maxSpeed])</a> ⇒ <code>module:pex-math~Vec2</code></dt>
+<dd><p>2D vector <code>smoothDamp</code>: <code>maxSpeed</code> limits the magnitude of the velocity.</p>
+</dd>
+<dt><a href="#smoothDampVec3">smoothDampVec3(current, target, velocity, smoothTime, dt, [maxSpeed])</a> ⇒ <code>module:pex-math~Vec3</code></dt>
+<dd><p>Vector <code>smoothDamp</code>: <code>maxSpeed</code> limits the magnitude of the velocity.</p>
+</dd>
+<dt><a href="#smoothDampQuat">smoothDampQuat(current, target, angularVelocity, smoothTime, dt, [maxSpeed])</a> ⇒ <code>number</code></dt>
+<dd><p>Quaternion <code>smoothDamp</code>: damps the scaled angle-axis rotation from <code>target</code>
+to <code>current</code>.</p>
+</dd>
+<dt><a href="#createTransition">createTransition()</a> ⇒ <code><a href="#SpringTransition">SpringTransition</a></code></dt>
+<dd><p>Identity transition, to be filled by <code>transition</code>.</p>
+</dd>
+<dt><a href="#transition">transition(out, config, dt)</a> ⇒ <code><a href="#SpringTransition">SpringTransition</a></code></dt>
+<dd><p>Exact transition of a spring over <code>dt</code>, for any damping ratio.</p>
+</dd>
+</dl>
+
+## Typedefs
+
+<dl>
+<dt><a href="#SpringConfig">SpringConfig</a> : <code>object</code></dt>
+<dd><p>Normalized spring: every parametrisation converts to it.</p>
+</dd>
+<dt><a href="#PhysicalSpring">PhysicalSpring</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#PerceptualSpring">PerceptualSpring</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#SpringTransition">SpringTransition</a> : <code>object</code></dt>
+<dd><p>Exact map from displacement and velocity to their values <code>dt</code> later:</p>
+<ul>
+<li><code>e₁ = pp·e₀ + pv·v₀</code></li>
+<li><code>v₁ = vp·e₀ + vv·v₀</code></li>
+</ul>
+<p>Shared by every value stepped with the same config and <code>dt</code>.</p>
+</dd>
+<dt><a href="#SpringState">SpringState</a> : <code>object</code></dt>
+<dd><p>Velocity carried between scalar steps.</p>
+</dd>
+<dt><a href="#SpringEaseOptions">SpringEaseOptions</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#SpringEase">SpringEase</a> : <code>object</code></dt>
+<dd><p>Spring as an easing function over its settling time.</p>
+</dd>
+</dl>
+
+<a name="advance"></a>
+
+## advance(current, goal, state, step, [goalVelocity]) ⇒ <code>number</code>
+
+Steps a value towards `goal` with a spring.
+
+**Kind**: global function
+**Returns**: <code>number</code> - The new value.
+**See**: https://theorangeduck.com/page/spring-roll-call#springdamper
+
+| Param          | Type                                               | Default        | Description                                                                              |
+| -------------- | -------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------- |
+| current        | <code>number</code>                                |                |                                                                                          |
+| goal           | <code>number</code>                                |                | Goal at the start of the step. The caller advances a moving goal by `goalVelocity * dt`. |
+| state          | [<code>SpringState</code>](#SpringState)           |                | Updated in place.                                                                        |
+| step           | [<code>SpringTransition</code>](#SpringTransition) |                |                                                                                          |
+| [goalVelocity] | <code>number</code>                                | <code>0</code> | Goal velocity over the step.                                                             |
+
+<a name="advanceVec2"></a>
+
+## advanceVec2(current, goal, velocity, step, [goalVelocity]) ⇒ <code>module:pex-math~Vec2</code>
+
+2D vector `advance`.
+
+**Kind**: global function
+**Returns**: <code>module:pex-math~Vec2</code> - `current`.
+
+| Param          | Type                                               | Default             | Description                    |
+| -------------- | -------------------------------------------------- | ------------------- | ------------------------------ |
+| current        | <code>module:pex-math~Vec2</code>                  |                     | Updated in place.              |
+| goal           | <code>module:pex-math~Vec2</code>                  |                     | Goal at the start of the step. |
+| velocity       | <code>module:pex-math~Vec2</code>                  |                     | Updated in place.              |
+| step           | [<code>SpringTransition</code>](#SpringTransition) |                     |                                |
+| [goalVelocity] | <code>module:pex-math~Vec2</code>                  | <code>[0, 0]</code> |                                |
+
+<a name="advanceVec3"></a>
+
+## advanceVec3(current, goal, velocity, step, [goalVelocity]) ⇒ <code>module:pex-math~Vec3</code>
+
+Vector `advance`.
+
+**Kind**: global function
+**Returns**: <code>module:pex-math~Vec3</code> - `current`.
+
+| Param          | Type                                               | Default                | Description                    |
+| -------------- | -------------------------------------------------- | ---------------------- | ------------------------------ |
+| current        | <code>module:pex-math~Vec3</code>                  |                        | Updated in place.              |
+| goal           | <code>module:pex-math~Vec3</code>                  |                        | Goal at the start of the step. |
+| velocity       | <code>module:pex-math~Vec3</code>                  |                        | Updated in place.              |
+| step           | [<code>SpringTransition</code>](#SpringTransition) |                        |                                |
+| [goalVelocity] | <code>module:pex-math~Vec3</code>                  | <code>[0, 0, 0]</code> |                                |
+
+<a name="advanceQuat"></a>
+
+## advanceQuat(current, goal, angularVelocity, step) ⇒ <code>number</code>
+
+Quaternion `advance`: springs the scaled angle-axis rotation from `goal` to
+`current`.
+
+**Kind**: global function
+**Returns**: <code>number</code> - The remaining angle in radians.
+**See**: https://theorangeduck.com/page/spring-roll-call#quaternionspring
+
+| Param           | Type                                               | Description                                          |
+| --------------- | -------------------------------------------------- | ---------------------------------------------------- |
+| current         | <code>module:pex-math~Quat</code>                  | Updated in place.                                    |
+| goal            | <code>module:pex-math~Quat</code>                  |                                                      |
+| angularVelocity | <code>module:pex-math~Vec3</code>                  | Scaled axis in radians per second, updated in place. |
+| step            | [<code>SpringTransition</code>](#SpringTransition) |                                                      |
+
+<a name="fromPhysical"></a>
+
+## fromPhysical(options) ⇒ [<code>SpringConfig</code>](#SpringConfig)
+
+Spring from mass, stiffness and damping.
+
+**Kind**: global function
+**See**: https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator
+
+| Param             | Type                | Default        | Description     |
+| ----------------- | ------------------- | -------------- | --------------- |
+| options           | <code>object</code> |                |                 |
+| [options.mass]    | <code>number</code> | <code>1</code> |                 |
+| options.stiffness | <code>number</code> |                | Greater than 0. |
+| options.damping   | <code>number</code> |                |                 |
+
+<a name="toPhysical"></a>
+
+## toPhysical(config, [mass]) ⇒ [<code>PhysicalSpring</code>](#PhysicalSpring)
+
+Mass, stiffness and damping of a spring.
+
+**Kind**: global function
+
+| Param  | Type                                       | Default        |
+| ------ | ------------------------------------------ | -------------- |
+| config | [<code>SpringConfig</code>](#SpringConfig) |                |
+| [mass] | <code>number</code>                        | <code>1</code> |
+
+<a name="fromPerceptual"></a>
+
+## fromPerceptual(options) ⇒ [<code>SpringConfig</code>](#SpringConfig)
+
+Spring from Apple's perceptual duration and bounce, as in SwiftUI.
+
+**Kind**: global function
+**See**
+
+- https://developer.apple.com/videos/play/wwdc2023/10158/
+- https://www.kvin.me/posts/effortless-ui-spring-animations
+
+| Param            | Type                | Default        | Description                                         |
+| ---------------- | ------------------- | -------------- | --------------------------------------------------- |
+| options          | <code>object</code> |                |                                                     |
+| options.duration | <code>number</code> |                | Period of the undamped spring in seconds.           |
+| [options.bounce] | <code>number</code> | <code>0</code> | In (−1, 1]: 0 is critical, > 0 bounces, < 0 creeps. |
+
+<a name="toPerceptual"></a>
+
+## toPerceptual(config) ⇒ [<code>PerceptualSpring</code>](#PerceptualSpring)
+
+Perceptual duration and bounce of a spring.
+
+**Kind**: global function
+
+| Param  | Type                                       |
+| ------ | ------------------------------------------ |
+| config | [<code>SpringConfig</code>](#SpringConfig) |
+
+<a name="fromSmoothTime"></a>
+
+## fromSmoothTime(smoothTime) ⇒ [<code>SpringConfig</code>](#SpringConfig)
+
+Critically damped spring from Lowe's and Unity's smooth time.
+
+From rest, it covers 59% of the distance in `smoothTime` and 95% in 2.37 ×
+`smoothTime`.
+
+**Kind**: global function
+**See**: Lowe, T. (2004). Critically damped ease-in/ease-out smoothing. Game Programming Gems 4, §1.10. ISBN 978-1584502951.
+
+| Param      | Type                | Description |
+| ---------- | ------------------- | ----------- |
+| smoothTime | <code>number</code> | In seconds. |
+
+<a name="halfLifeDecay"></a>
+
+## halfLifeDecay(halfLife, dt) ⇒ <code>number</code>
+
+Fraction of the distance left after `dt` with exponential damping.
+
+**Kind**: global function
+**See**: https://theorangeduck.com/page/spring-roll-call#exactdamper
+
+| Param    | Type                | Description                                                                      |
+| -------- | ------------------- | -------------------------------------------------------------------------------- |
+| halfLife | <code>number</code> | Time to cover half the remaining distance, in seconds. 0 or less leaves nothing. |
+| dt       | <code>number</code> | In seconds. 0 or less leaves everything, whatever the half-life.                 |
+
+<a name="damp"></a>
+
+## damp(current, target, halfLife, dt) ⇒ <code>number</code>
+
+Exponential damping towards `target`: no velocity, no overshoot.
+
+**Kind**: global function
+**Returns**: <code>number</code> - The new value.
+**See**
+
+- https://theorangeduck.com/page/spring-roll-call#exactdamper
+- https://www.rorydriscoll.com/2016/03/07/frame-rate-independent-damping-using-lerp/
+
+| Param    | Type                | Description                                            |
+| -------- | ------------------- | ------------------------------------------------------ |
+| current  | <code>number</code> |                                                        |
+| target   | <code>number</code> |                                                        |
+| halfLife | <code>number</code> | Time to cover half the remaining distance, in seconds. |
+| dt       | <code>number</code> | In seconds.                                            |
+
+<a name="settlingTime"></a>
+
+## settlingTime(config, [velocity], [restThreshold]) ⇒ <code>number</code>
+
+Time after which the displacement stays under `restThreshold`, starting from
+displacement 1.
+
+**Kind**: global function
+**Returns**: <code>number</code> - In seconds. Infinity when the spring never settles.
+
+| Param           | Type                                       | Default           | Description                                                 |
+| --------------- | ------------------------------------------ | ----------------- | ----------------------------------------------------------- |
+| config          | [<code>SpringConfig</code>](#SpringConfig) |                   |                                                             |
+| [velocity]      | <code>number</code>                        | <code>0</code>    | Initial velocity towards the goal, in distances per second. |
+| [restThreshold] | <code>number</code>                        | <code>1e-3</code> | Relative to the distance.                                   |
+
+<a name="ease"></a>
+
+## ease(config, [options]) ⇒ [<code>SpringEase</code>](#SpringEase)
+
+Spring from 0 to 1 as an easing function over its settling time.
+
+**Kind**: global function
+**Throws**:
+
+- <code>RangeError</code> When the spring never settles: see `settlingTime`.
+
+| Param     | Type                                                 |
+| --------- | ---------------------------------------------------- |
+| config    | [<code>SpringConfig</code>](#SpringConfig)           |
+| [options] | [<code>SpringEaseOptions</code>](#SpringEaseOptions) |
+
+<a name="smoothDamp"></a>
+
+## smoothDamp(current, target, state, smoothTime, dt, [maxSpeed]) ⇒ <code>number</code>
+
+Critically damped spring towards `target` that never overshoots it, with
+Unity's signature.
+
+**Kind**: global function
+**Returns**: <code>number</code> - The new value.
+**See**
+
+- Lowe, T. (2004). Critically damped ease-in/ease-out smoothing. Game Programming Gems 4, §1.10. ISBN 978-1584502951.
+- https://github.com/Unity-Technologies/UnityCsReference/blob/225b0fbdb57cc17d094e8056b71f8314aba56f73/Runtime/Export/Math/Mathf.cs#L276-L307
+- https://theorangeduck.com/page/spring-roll-call#critical
+
+| Param      | Type                                     | Default               | Description                       |
+| ---------- | ---------------------------------------- | --------------------- | --------------------------------- |
+| current    | <code>number</code>                      |                       |                                   |
+| target     | <code>number</code>                      |                       |                                   |
+| state      | [<code>SpringState</code>](#SpringState) |                       | Updated in place.                 |
+| smoothTime | <code>number</code>                      |                       | In seconds. See `fromSmoothTime`. |
+| dt         | <code>number</code>                      |                       | In seconds.                       |
+| [maxSpeed] | <code>number</code>                      | <code>Infinity</code> | In units per second.              |
+
+<a name="smoothDampVec2"></a>
+
+## smoothDampVec2(current, target, velocity, smoothTime, dt, [maxSpeed]) ⇒ <code>module:pex-math~Vec2</code>
+
+2D vector `smoothDamp`: `maxSpeed` limits the magnitude of the velocity.
+
+**Kind**: global function
+**Returns**: <code>module:pex-math~Vec2</code> - `current`.
+**See**: https://github.com/Unity-Technologies/UnityCsReference/blob/225b0fbdb57cc17d094e8056b71f8314aba56f73/Runtime/Export/Math/Vector2.cs#L447-L502
+
+| Param      | Type                              | Default               | Description                       |
+| ---------- | --------------------------------- | --------------------- | --------------------------------- |
+| current    | <code>module:pex-math~Vec2</code> |                       | Updated in place.                 |
+| target     | <code>module:pex-math~Vec2</code> |                       |                                   |
+| velocity   | <code>module:pex-math~Vec2</code> |                       | Updated in place.                 |
+| smoothTime | <code>number</code>               |                       | In seconds. See `fromSmoothTime`. |
+| dt         | <code>number</code>               |                       | In seconds.                       |
+| [maxSpeed] | <code>number</code>               | <code>Infinity</code> | In units per second.              |
+
+<a name="smoothDampVec3"></a>
+
+## smoothDampVec3(current, target, velocity, smoothTime, dt, [maxSpeed]) ⇒ <code>module:pex-math~Vec3</code>
+
+Vector `smoothDamp`: `maxSpeed` limits the magnitude of the velocity.
+
+**Kind**: global function
+**Returns**: <code>module:pex-math~Vec3</code> - `current`.
+**See**: https://github.com/Unity-Technologies/UnityCsReference/blob/225b0fbdb57cc17d094e8056b71f8314aba56f73/Runtime/Export/Math/Vector3.cs#L231-L301
+
+| Param      | Type                              | Default               | Description                       |
+| ---------- | --------------------------------- | --------------------- | --------------------------------- |
+| current    | <code>module:pex-math~Vec3</code> |                       | Updated in place.                 |
+| target     | <code>module:pex-math~Vec3</code> |                       |                                   |
+| velocity   | <code>module:pex-math~Vec3</code> |                       | Updated in place.                 |
+| smoothTime | <code>number</code>               |                       | In seconds. See `fromSmoothTime`. |
+| dt         | <code>number</code>               |                       | In seconds.                       |
+| [maxSpeed] | <code>number</code>               | <code>Infinity</code> | In units per second.              |
+
+<a name="smoothDampQuat"></a>
+
+## smoothDampQuat(current, target, angularVelocity, smoothTime, dt, [maxSpeed]) ⇒ <code>number</code>
+
+Quaternion `smoothDamp`: damps the scaled angle-axis rotation from `target`
+to `current`.
+
+**Kind**: global function
+**Returns**: <code>number</code> - The remaining angle in radians.
+**See**: https://theorangeduck.com/page/spring-roll-call#quaternionspring
+
+| Param           | Type                              | Default               | Description                                          |
+| --------------- | --------------------------------- | --------------------- | ---------------------------------------------------- |
+| current         | <code>module:pex-math~Quat</code> |                       | Updated in place.                                    |
+| target          | <code>module:pex-math~Quat</code> |                       |                                                      |
+| angularVelocity | <code>module:pex-math~Vec3</code> |                       | Scaled axis in radians per second, updated in place. |
+| smoothTime      | <code>number</code>               |                       | In seconds. See `fromSmoothTime`.                    |
+| dt              | <code>number</code>               |                       | In seconds.                                          |
+| [maxSpeed]      | <code>number</code>               | <code>Infinity</code> | In radians per second.                               |
+
+<a name="createTransition"></a>
+
+## createTransition() ⇒ [<code>SpringTransition</code>](#SpringTransition)
+
+Identity transition, to be filled by `transition`.
+
+**Kind**: global function
+<a name="transition"></a>
+
+## transition(out, config, dt) ⇒ [<code>SpringTransition</code>](#SpringTransition)
+
+Exact transition of a spring over `dt`, for any damping ratio.
+
+**Kind**: global function
+**See**: https://www.ryanjuckett.com/damped-springs/
+
+| Param  | Type                                               | Description                                            |
+| ------ | -------------------------------------------------- | ------------------------------------------------------ |
+| out    | [<code>SpringTransition</code>](#SpringTransition) |                                                        |
+| config | [<code>SpringConfig</code>](#SpringConfig)         |                                                        |
+| dt     | <code>number</code>                                | Step in seconds. 0 or less leaves the state unchanged. |
+
+<a name="SpringConfig"></a>
+
+## SpringConfig : <code>object</code>
+
+Normalized spring: every parametrisation converts to it.
+
+**Kind**: global typedef
+**Properties**
+
+| Name  | Type                | Description                                              |
+| ----- | ------------------- | -------------------------------------------------------- |
+| omega | <code>number</code> | Natural frequency ω in radians per second.               |
+| zeta  | <code>number</code> | Damping ratio ζ: < 1 bounces, 1 is critical, > 1 creeps. |
+
+<a name="PhysicalSpring"></a>
+
+## PhysicalSpring : <code>object</code>
+
+**Kind**: global typedef
+**Properties**
+
+| Name      | Type                | Description                                                                                 |
+| --------- | ------------------- | ------------------------------------------------------------------------------------------- |
+| mass      | <code>number</code> |                                                                                             |
+| stiffness | <code>number</code> | Force per unit of displacement. Greater than 0: without it, nothing pulls towards the goal. |
+| damping   | <code>number</code> | Force per unit of velocity.                                                                 |
+
+<a name="PerceptualSpring"></a>
+
+## PerceptualSpring : <code>object</code>
+
+**Kind**: global typedef
+**Properties**
+
+| Name     | Type                | Description                                         |
+| -------- | ------------------- | --------------------------------------------------- |
+| duration | <code>number</code> | Period of the undamped spring in seconds.           |
+| bounce   | <code>number</code> | In (−1, 1]: 0 is critical, > 0 bounces, < 0 creeps. |
+
+<a name="SpringTransition"></a>
+
+## SpringTransition : <code>object</code>
+
+Exact map from displacement and velocity to their values `dt` later:
+
+- `e₁ = pp·e₀ + pv·v₀`
+- `v₁ = vp·e₀ + vv·v₀`
+
+Shared by every value stepped with the same config and `dt`.
+
+**Kind**: global typedef
+**Properties**
+
+| Name | Type                | Description      |
+| ---- | ------------------- | ---------------- |
+| dt   | <code>number</code> | Step in seconds. |
+| pp   | <code>number</code> |                  |
+| pv   | <code>number</code> |                  |
+| vp   | <code>number</code> |                  |
+| vv   | <code>number</code> |                  |
+
+<a name="SpringState"></a>
+
+## SpringState : <code>object</code>
+
+Velocity carried between scalar steps.
+
+**Kind**: global typedef
+**Properties**
+
+| Name     | Type                | Description          |
+| -------- | ------------------- | -------------------- |
+| velocity | <code>number</code> | In units per second. |
+
+<a name="SpringEaseOptions"></a>
+
+## SpringEaseOptions : <code>object</code>
+
+**Kind**: global typedef
+**Properties**
+
+| Name            | Type                | Default           | Description                                                                       |
+| --------------- | ------------------- | ----------------- | --------------------------------------------------------------------------------- |
+| [velocity]      | <code>number</code> | <code>0</code>    | Initial velocity towards the goal, in distances per second.                       |
+| [restThreshold] | <code>number</code> | <code>1e-3</code> | Displacement, relative to the distance, under which the spring counts as settled. |
+
+<a name="SpringEase"></a>
+
+## SpringEase : <code>object</code>
+
+Spring as an easing function over its settling time.
+
+**Kind**: global typedef
+**Properties**
+
+| Name     | Type                  | Description                                                          |
+| -------- | --------------------- | -------------------------------------------------------------------- |
+| ease     | <code>function</code> | Progress from 0 to 1 at normalized time `t`. Exactly 1 from `t = 1`. |
+| duration | <code>number</code>   | Settling time in seconds.                                            |
 
 <!-- api-end -->
 

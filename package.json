@@ -46,11 +46,6 @@
     "test": "node --experimental-test-coverage --test-coverage-exclude='test/**' --test-coverage-lines=100 --test-coverage-branches=100 --test-coverage-functions=100 --test test/",
     "test:watch": "node --watch --test test/"
   },
-  "packageManager": "npm@11.3.0",
-  "engines": {
-    "node": ">=24.0.0",
-    "snowdev": ">=3.0.0-alpha.3"
-  },
   "dependencies": {
     "pex-math": "^4.5.0"
   },
@@ -59,5 +54,10 @@
     "es-module-shims": "^2.8.4",
     "inverse-lerp": "^1.0.1",
     "tweakpane": "^4.0.5"
+  },
+  "packageManager": "npm@11.3.0",
+  "engines": {
+    "node": ">=24.0.0",
+    "snowdev": ">=3.0.0-alpha.3"
   }
 }
