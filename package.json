@@ -1,0 +1,63 @@
+{
+  "name": "ressort",
+  "version": "1.0.0",
+  "description": "Damped springs solved exactly: frame rate independent steppers for numbers, vectors and quaternions, and springs as easing functions.",
+  "keywords": [
+    "spring",
+    "damped-spring",
+    "damper",
+    "easing",
+    "animation",
+    "physics",
+    "smooth-damp",
+    "critically-damped",
+    "harmonic-oscillator",
+    "quaternion"
+  ],
+  "homepage": "https://github.com/dmnsgn/ressort",
+  "bugs": "https://github.com/dmnsgn/ressort/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmnsgn/ressort.git"
+  },
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://paypal.me/dmnsgn"
+    },
+    {
+      "type": "individual",
+      "url": "https://commerce.coinbase.com/checkout/56cbdf28-e323-48d8-9c98-7019e72c97f3"
+    }
+  ],
+  "license": "MIT",
+  "author": "Damien Seguin (https://github.com/dmnsgn)",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "main": "./index.js",
+  "types": "./types/index.d.ts",
+  "scripts": {
+    "test": "node --experimental-test-coverage --test-coverage-exclude='test/**' --test-coverage-lines=100 --test-coverage-branches=100 --test-coverage-functions=100 --test test/",
+    "test:watch": "node --watch --test test/"
+  },
+  "packageManager": "npm@11.3.0",
+  "engines": {
+    "node": ">=24.0.0",
+    "snowdev": ">=3.0.0-alpha.3"
+  },
+  "dependencies": {
+    "pex-math": "^4.5.0"
+  },
+  "devDependencies": {
+    "canvas-context": "^3.3.1",
+    "es-module-shims": "^2.8.4",
+    "inverse-lerp": "^1.0.1",
+    "tweakpane": "^4.0.5"
+  }
+}

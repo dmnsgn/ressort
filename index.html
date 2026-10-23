@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>ressort by Damien Seguin (https://github.com/dmnsgn)</title>
+    <style>
+      :root {
+        --bg-editor: #f5ebe3;
+        --bg-chrome: #e5dbd3;
+        --bg-line: #c9bfb8;
+        --fg-default: #2b2119;
+        --fg-muted: #616161;
+        --ink-red: #c5031e;
+        --ink-orange: #9a4c00;
+        --ink-yellow: #7e5c05;
+        --ink-green: #546903;
+        --ink-cyan: #036d6c;
+        --ink-blue: #4060a3;
+        --ink-violet: #9935a3;
+        --fill-blue: #30436a;
+        --on-fill: #f2f2f2;
+
+        --pane-width: 256px;
+      }
+
+      body {
+        margin: 0;
+        overscroll-behavior: none;
+        font-family: sans-serif;
+        color: var(--fg-default);
+        background-color: var(--bg-editor);
+      }
+
+      .Header {
+        position: relative;
+        padding: 0 20px;
+        pointer-events: none;
+      }
+      .Header-link {
+        margin-right: 12px;
+        color: var(--fg-default);
+        pointer-events: auto;
+      }
+      .Header-link[aria-current] {
+        color: var(--ink-red);
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+        padding: 16px;
+        margin-right: calc(var(--pane-width) + 16px);
+      }
+      .Lead {
+        max-width: 72ch;
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.5;
+      }
+
+      .Code {
+        font-family: ui-monospace, monospace;
+        font-size: 0.9em;
+      }
+
+      .Button {
+        padding: 4px 10px;
+        font: inherit;
+        color: var(--fg-default);
+        cursor: pointer;
+        background: var(--bg-line);
+        border: 0;
+        border-radius: 2px;
+      }
+      .Button:hover {
+        color: var(--on-fill);
+        background: var(--fill-blue);
+      }
+
+      .Panel {
+        max-width: 1920px;
+        padding: 12px;
+        background: var(--bg-chrome);
+      }
+      .Panel-title {
+        margin: 0 0 8px;
+        font-size: 12px;
+        font-weight: normal;
+      }
+      .Panel-canvas {
+        display: block;
+        width: 100%;
+      }
+      .Panel-canvas--field {
+        height: max(360px, 55vh);
+        touch-action: none;
+        cursor: crosshair;
+      }
+      .Panel-canvas--speed {
+        height: 96px;
+      }
+      .Panel-canvas--plot {
+        height: max(320px, 45vh);
+      }
+      .Panel-canvas--curve {
+        height: 320px;
+        touch-action: none;
+        cursor: grab;
+      }
+      .Panel-canvas--lanes {
+        height: max(480px, 70vh);
+        touch-action: none;
+      }
+      .Panel-status {
+        margin: 8px 0 0;
+        line-height: 1.5;
+        opacity: 0.6;
+      }
+
+      .Legend {
+        display: grid;
+        gap: 8px;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+      .Legend-name {
+        margin-right: 4px;
+      }
+      .Legend-code {
+        display: block;
+        margin-top: 2px;
+        color: var(--fg-muted);
+      }
+
+      .Preview-row {
+        margin: 10px 0;
+      }
+      .Preview-rail {
+        position: relative;
+        height: 18px;
+        margin: 4px calc(15% + 18px) 0 15%;
+        border-bottom: 1px solid var(--bg-line);
+      }
+      .Preview-box {
+        position: absolute;
+        top: 0;
+        width: 18px;
+        height: 18px;
+        border-radius: 3px;
+      }
+
+      .Export {
+        display: grid;
+        gap: 12px;
+      }
+
+      .CodeBlock {
+        margin: 0;
+      }
+      .CodeBlock-caption {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .CodeBlock-code {
+        padding: 8px;
+        margin: 6px 0 0;
+        font-family: ui-monospace, monospace;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+        background: var(--bg-editor);
+      }
+      ::highlight(code-keyword) {
+        color: var(--ink-red);
+      }
+      ::highlight(code-string) {
+        color: var(--ink-green);
+      }
+      ::highlight(code-constant) {
+        color: var(--ink-orange);
+      }
+      ::highlight(code-function) {
+        color: var(--ink-blue);
+      }
+      ::highlight(code-punctuation) {
+        color: var(--ink-cyan);
+      }
+
+      .tp-dfwv {
+        max-height: stretch;
+        overflow: auto;
+        scrollbar-color: var(--bg-line) var(--bg-chrome);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="Header">
+      <h1>ressort</h1>
+      <nav>
+        <a class="Header-link" href="?id=index">Overview</a>
+        <a class="Header-link" href="?id=frame-rate">Frame rate</a>
+        <a class="Header-link" href="?id=editor">Easing editor</a>
+        <a class="Header-link" href="?id=steppers">Steppers</a>
+      </nav>
+    </header>
+    <main></main>
+    <script async src="web_modules/es-module-shims.js" type="module"></script>
+    <script src="web_modules/import-map.json" type="importmap-shim"></script>
+
+    <script type="module-shim">
+      (async () => {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+
+        for (const link of document.querySelectorAll(".Header-link")) {
+          if (link.search === `?id=${id || "index"}`) {
+            link.setAttribute("aria-current", "page");
+          }
+        }
+
+        try {
+          await importShim(`./examples/${id || "index"}.js`);
+        } catch (error) {
+          console.error(error);
+          await importShim(`./examples/index.js`);
+        }
+      })();
+    </script>
+  </body>
+</html>
