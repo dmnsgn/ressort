@@ -1,6 +1,6 @@
 {
   "name": "ressort",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Damped springs solved exactly: frame rate independent steppers for numbers, vectors and quaternions, and springs as easing functions.",
   "keywords": [
     "spring",
