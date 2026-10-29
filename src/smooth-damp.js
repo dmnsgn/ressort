@@ -8,15 +8,18 @@ import {
   quatDisplacement,
   applyQuatDisplacement,
 } from "./advance.js";
-import { MIN_SMOOTH_TIME, fromSmoothTime } from "./config.js";
+import { MIN_SMOOTH_TIME, fromSmoothTime, smoothTimeOmega } from "./config.js";
 import { createTransition, transition } from "./transition.js";
 
 const TEMP_STEP = createTransition();
+const TEMP_CONFIG = fromSmoothTime(1);
 
 // Lowe's ω = 2 / smoothTime with the exact exponential rather than his
 // polynomial approximation, 9% off at ω·dt = 2.
-const criticalStep = (smoothTime, dt) =>
-  transition(TEMP_STEP, fromSmoothTime(smoothTime), dt);
+const criticalStep = (smoothTime, dt) => {
+  TEMP_CONFIG.omega = smoothTimeOmega(smoothTime);
+  return transition(TEMP_STEP, TEMP_CONFIG, dt);
+};
 
 /**
  * Critically damped spring towards `target` that never overshoots it, with

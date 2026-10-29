@@ -89,13 +89,17 @@ const TEMP_AXIS = vec3.create();
  * @returns {number} The angle in radians.
  */
 function quatDisplacement(out, current, goal) {
-  const [x, y, z, w] = quat.mult(
+  const q = quat.mult(
     quat.set(TEMP_QUAT, current),
     quat.conjugate(quat.set(TEMP_INVERSE, goal)),
   );
+  const x = q[0];
+  const y = q[1];
+  const z = q[2];
+  const w = q[3];
   // q and -q are the same rotation.
   const sign = w < 0 ? -1 : 1;
-  const sin = Math.hypot(x, y, z);
+  const sin = Math.sqrt(x * x + y * y + z * z);
   // atan2 stays accurate near identity, where acos(w) can't resolve tiny angles.
   const angle = 2 * Math.atan2(sin, sign * w);
   // angle / sin tends to 2 at identity.

@@ -64,6 +64,15 @@ function toPerceptual({ omega, zeta }) {
 }
 
 /**
+ * @ignore
+ * @param {number} smoothTime In seconds.
+ * @returns {number}
+ */
+function smoothTimeOmega(smoothTime) {
+  return 2 / Math.max(MIN_SMOOTH_TIME, smoothTime);
+}
+
+/**
  * Critically damped spring from Lowe's and Unity's smooth time.
  *
  * From rest, it covers 59% of the distance in `smoothTime` and 95% in 2.37 ×
@@ -74,7 +83,7 @@ function toPerceptual({ omega, zeta }) {
  * @see Lowe, T. (2004). Critically damped ease-in/ease-out smoothing. Game Programming Gems 4, §1.10. ISBN 978-1584502951.
  */
 function fromSmoothTime(smoothTime) {
-  return { omega: 2 / Math.max(MIN_SMOOTH_TIME, smoothTime), zeta: 1 };
+  return { omega: smoothTimeOmega(smoothTime), zeta: 1 };
 }
 
 export {
@@ -84,4 +93,5 @@ export {
   fromPerceptual,
   toPerceptual,
   fromSmoothTime,
+  smoothTimeOmega,
 };

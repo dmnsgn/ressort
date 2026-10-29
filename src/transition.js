@@ -10,7 +10,16 @@ function createTransition() {
   return { dt: 0, pp: 1, pv: 0, vp: 0, vv: 1 };
 }
 
-const ROOTS = {};
+// Every field up front: one shape whatever the regime.
+const createRoots = () => ({
+  regime: "drift",
+  alpha: 0,
+  beta: 0,
+  z1: 0,
+  z2: 0,
+});
+
+const ROOTS = createRoots();
 
 /**
  * Writes the regime of a spring and the roots of `s² + 2ζω·s + ω² = 0`: `−α ±
@@ -98,4 +107,4 @@ function transition(out, config, dt) {
   return out;
 }
 
-export { CRITICAL_BAND, roots, createTransition, transition };
+export { CRITICAL_BAND, createRoots, roots, createTransition, transition };

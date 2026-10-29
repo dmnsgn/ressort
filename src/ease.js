@@ -1,4 +1,9 @@
-import { createTransition, roots, transition } from "./transition.js";
+import {
+  createRoots,
+  createTransition,
+  roots,
+  transition,
+} from "./transition.js";
 
 const SAMPLES = 1000;
 const ITERATIONS = 40;
@@ -11,7 +16,7 @@ function displacement(config, velocity, time) {
   return TEMP.pp + TEMP.pv * velocity;
 }
 
-const ROOTS = {};
+const ROOTS = createRoots();
 
 // Upper bound of |displacement| from displacement 1, without oscillation.
 function envelope(omega, { regime, z1, z2 }, velocity, time) {
